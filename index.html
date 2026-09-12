@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Friendly HLS Player</title>
+    <!-- Include hls.js for non-iOS fallback support -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        .video-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #000;
+        }
+        video {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="video-container">
+    <!-- 
+      Crucial iOS Attributes:
+      - controls: Required for iOS playback UI
+      - playsinline: Prevents iOS from forcing automatic fullscreen
+      - webkit-playsinline: Legacy support for older iOS versions
+    -->
+    <video id="video" controls playsinline webkit-playsinline></video>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    // Replace this with your actual .m3u8 URL
+    const streamUrl = 'https://amg00556-amg00556c3-firetv-us-6060.playouts.now.amagi.tv/playlist360p.m3u8
+'; 
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // 1. Native iOS Support
+        // iOS Safari and Chrome support HLS natively. We just feed the source directly.
+        video.src = streamUrl;
+    } else if (Hls.isSupported()) {
+        // 2. Fallback for Desktop/Android
+        // Uses hls.js to decode the stream where native support lacks.
+        const hls = new Hls();
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+    } else {
+        alert('Your browser does not support HLS playback.');
+    }
+</script>
+
+</body>
+</html>
+
+
+</body>
+</html>
