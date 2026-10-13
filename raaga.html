@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Raaga Lab – Carnatic Raaga Learner</title>
+<style>
+:root{--bg:#fbf6ec;--panel:#fff;--ink:#2a2118;--dim:#7a6c5c;--line:#e7dcc8;--acc:#c2410c;--acc2:#0f766e;--chip:#f3e9d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17120d;--panel:#231b13;--ink:#f1e7d6;--dim:#a39380;--line:#3a2e20;--chip:#33281b;--acc:#fb923c;--acc2:#2dd4bf}}
+:root[data-theme="dark"]{--bg:#17120d;--panel:#231b13;--ink:#f1e7d6;--dim:#a39380;--line:#3a2e20;--chip:#33281b;--acc:#fb923c;--acc2:#2dd4bf}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,system-ui,Georgia,serif}
+main{max-width:640px;margin:0 auto;padding:12px 14px 40px}
+h1{margin:6px 0 2px;font:700 22px Georgia,serif}h1 span{color:var(--acc)}
+.sub{color:var(--dim);font-size:13px;margin:0 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button,select{font:inherit;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+button.pri,.tab.sel,.rg.sel{background:var(--acc);color:#fff;border-color:var(--acc)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.rgs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.rg{text-align:left;padding:10px}.rg small{display:block;color:var(--dim);font-size:11px}.rg.sel small{color:#ffe}
+h2{font:700 18px Georgia,serif;margin:0}
+h3{font:600 12px system-ui;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.sw{min-width:44px;padding:10px 8px;text-align:center;font-weight:600}
+.sw.hot{background:var(--acc2);color:#fff;border-color:var(--acc2);transform:scale(1.1)}
+.sw.gm{outline:2px dashed var(--acc);outline-offset:1px}
+.g{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.g:first-of-type{border-top:0}
+.g b{color:var(--acc)}
+.g p{margin:2px 0 0;font-size:14px;color:var(--dim)}
+.g button{margin-left:auto;flex:none}
+label{font-size:13px;color:var(--dim)}
+.note{font-size:12px;color:var(--dim)}
+</style></head><body><main>
+<h1>Raaga <span>Lab</span></h1>
+<p class="sub">Learn Carnatic raagas: arohana, avarohana and gamakas, with audio.</p>
+
+<div class="card row">
+ <label>Sa (tonic)&nbsp;<select id="sa"></select></label>
+ <button id="drone">Tanpura: off</button>
+ <button id="stop">■ Stop</button>
+</div>
+<div class="tabs"><button class="tab sel" id="t1">Raagas</button><button class="tab" id="t2">Gamaka guide</button></div>
+
+<div id="v1">
+ <div class="rgs" id="list" style="margin-bottom:10px"></div>
+ <div class="card" id="det"></div>
+</div>
+<div id="v2" hidden><div class="card" id="gloss"></div></div>
+<p class="note">Gamaka treatment varies by school, artist and context. The notes here describe common, typical usage to get you started. Learn the finer shades from a guru or recordings by established musicians. Audio uses a simple synthesized voice.</p>
+</main>
+<script>
+const SW={S:0,R1:1,R2:2,G2:3,G3:4,M1:5,M2:6,P:7,D1:8,D2:9,N2:10,N3:11,"S'":12};
+const GT={
+ Kampita:{d:'Oscillation: the note is shaken rapidly between itself and a neighbouring pitch.'},
+ Andolita:{d:'A slow, wide swing around the note, like a gentle swing. Gives a deeply expressive, languid feel.'},
+ Jaru:{d:'A glide or slide that connects one note smoothly to the next, with no gap between them.'},
+ Nokku:{d:'An accent: the note is stressed by quickly touching the pitch above it first, then settling.'},
+ Spurita:{d:'A quick double touch: the note is sounded and re-struck in the same breath.'}
+};
+const R=(id,name,mela,aro,gam,desc)=>({id,name,mela,aro,ava:[...aro].reverse(),gam,desc});
+const RAGAS=[
+ R('mm','Mayamalavagowla','Melakarta 15',['S','R1','G3','M1','P','D1','N3',"S'"],[{n:'R1',t:'Andolita',d:'Rishabham is leaned into slowly, with a gentle swing.'},{n:'G3',t:'Jaru',d:'Slide up into G3 from R1.'},{n:'D1',t:'Kampita',d:'A soft, slow shake on Dhaivatham.'}],'The first raaga taught to beginners; its scale is the basis of many students\' early lessons.'),
+ R('sb','Shankarabharanam','Melakarta 29',['S','R2','G3','M1','P','D2','N3',"S'"],[{n:'G3',t:'Kampita',d:'Gandhara is held with a slight, steady oscillation.'},{n:'D2',t:'Jaru',d:'Slide up from P to D2.'},{n:'N3',t:'Nokku',d:'Accent on N3 before reaching Sa.'}],'A bright, majestic raaga; its notes match the Western major scale.'),
+ R('kl','Kalyani','Melakarta 65',['S','R2','G3','M2','P','D2','N3',"S'"],[{n:'G3',t:'Kampita',d:'A shake on Gandhara that colours the phrase.'},{n:'M2',t:'Jaru',d:'Prati madhyamam is usually approached with a glide from G3.'},{n:'D2',t:'Nokku',d:'Stress on D2 leading up.'}],'A grand, auspicious raaga, easy to recognise by its sharp Ma (M2).'),
+ R('kh','Kharaharapriya','Melakarta 22',['S','R2','G2','M1','P','D2','N2',"S'"],[{n:'G2',t:'Kampita',d:'A flexible, shaken Gandhara is typical.'},{n:'R2',t:'Jaru',d:'Slide between S, R2 and G2.'},{n:'N2',t:'Kampita',d:'A shake on Nishadam in the phrase D2 N2 S\'.'}],'A soulful, gamaka-rich raaga that gives plenty of room for elaboration.'),
+ R('mo','Mohanam','Janya of 28',['S','R2','G3','P','D2',"S'"],[{n:'G3',t:'Kampita',d:'Gandhara shaken lightly: the signature of the raaga.'},{n:'D2',t:'Jaru',d:'Slide up from P to D2.'},{n:'R2',t:'Nokku',d:'A light accent on Rishabham.'}],'A five-note (pentatonic) raaga popular with beginners.'),
+ R('hd','Hamsadhwani','Janya of 29',['S','R2','G3','P','N3',"S'"],[{n:'G3',t:'Kampita',d:'Only a light, brief shake on Gandhara.'},{n:'N3',t:'Jaru',d:'A slide down from N3 to P.'},{n:'R2',t:'Spurita',d:'A quick double touch on Rishabham.'}],'A bright, joyful pentatonic raaga with relatively few heavy gamakas.'),
+ R('hi','Hindolam','Janya of 20',['S','G2','M1','D1','N2',"S'"],[{n:'G2',t:'Kampita',d:'A slow shake on Gandhara.'},{n:'D1',t:'Jaru',d:'Slide up to D1 from M1.'},{n:'N2',t:'Nokku',d:'Accent on Nishadam before Sa.'}],'A calm, meditative pentatonic raaga.'),
+ R('bh','Bhairavi','Janya of 20',['S','R2','G2','M1','P','D1','N2',"S'"],[{n:'G2',t:'Andolita',d:'Gandhara is sung with a slow, wide swing, a hallmark of the raaga.'},{n:'D1',t:'Kampita',d:'A shake on Dhaivatham.'},{n:'N2',t:'Jaru',d:'Slide between N2 and Sa.'}],'A devotional, tender raaga often sung at the end of a concert.')
+];
+let cur=RAGAS[0],useG=true,ctx,bus,timers=[],dr=null;
+const $=id=>document.getElementById(id);
+const base=()=>261.63*Math.pow(2,(+$('sa').value)/12);
+const fq=o=>base()*Math.pow(2,o/12);
+
+function ensure(){
+ try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+ if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();
+  try{const u=ctx.createBufferSource();u.buffer=ctx.createBuffer(1,1,22050);u.connect(ctx.destination);u.start(0)}catch(e){}}
+ if(ctx.state!=='running')ctx.resume();
+}
+function newBus(){stop();bus=ctx.createGain();bus.gain.value=.9;bus.connect(ctx.destination)}
+function stop(){timers.forEach(clearTimeout);timers=[];if(bus){try{bus.disconnect()}catch(e){}bus=null}document.querySelectorAll('.hot').forEach(e=>e.classList.remove('hot'))}
+function tone(off,t,dur,type,prevOff){
+ const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain(),f0=fq(off);
+ o.type='sawtooth';f.type='lowpass';f.frequency.value=2200;f.Q.value=.7;
+ o.frequency.setValueAtTime(f0,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.32,t+.04);g.gain.setValueAtTime(.32,t+dur-.08);g.gain.linearRampToValueAtTime(.0001,t+dur);
+ const lfo=(hz,cents)=>{const l=ctx.createOscillator(),lg=ctx.createGain();l.frequency.value=hz;lg.gain.value=cents;l.connect(lg);lg.connect(o.detune);l.start(t);l.stop(t+dur+.05)};
+ if(type==='Kampita')lfo(6,40);
+ if(type==='Andolita')lfo(2.4,70);
+ if(type==='Jaru'){const p=fq(prevOff!=null?prevOff:off-2);o.frequency.setValueAtTime(p,t);o.frequency.exponentialRampToValueAtTime(f0,t+Math.min(.3,dur*.5))}
+ if(type==='Nokku'){o.frequency.setValueAtTime(fq(off+2),t);o.frequency.setValueAtTime(f0,t+.09)}
+ if(type==='Spurita'){g.gain.setValueAtTime(.32,t+dur*.45);g.gain.linearRampToValueAtTime(.05,t+dur*.45+.03);g.gain.linearRampToValueAtTime(.32,t+dur*.45+.08)}
+ o.connect(f);f.connect(g);g.connect(bus);o.start(t);o.stop(t+dur+.05);
+}
+function seq(arr,prefix,gmap,step){
+ ensure();newBus();let t=ctx.currentTime+.08;step=step||.7;
+ arr.forEach((n,i)=>{
+  tone(SW[n],t,step,gmap&&gmap[n],i?SW[arr[i-1]]:null);
+  const el=$(prefix+i);if(el)timers.push(setTimeout(()=>{document.querySelectorAll('.hot').forEach(e=>e.classList.remove('hot'));el.classList.add('hot')},(t-ctx.currentTime)*1000));
+  t+=step});
+ timers.push(setTimeout(()=>document.querySelectorAll('.hot').forEach(e=>e.classList.remove('hot')),(t-ctx.currentTime)*1000));
+}
+function hold(prev,n,type){ensure();newBus();const t=ctx.currentTime+.08;
+ tone(SW[prev],t,.5,null,null);tone(SW[n],t+.5,1.6,type,SW[prev])}
+const gmap=r=>{const m={};r.gam.forEach(x=>m[x.n]=x.t);return m};
+
+function chips(arr,prefix,r){const m=gmap(r);return arr.map((n,i)=>`<button class="sw${useG&&m[n]?' gm':''}" id="${prefix}${i}" data-n="${n}">${n}</button>`).join('')}
+function render(){
+ const r=cur;
+ $('list').innerHTML=RAGAS.map(x=>`<button class="rg${x.id===r.id?' sel':''}" data-id="${x.id}">${x.name}<small>${x.mela}</small></button>`).join('');
+ const gm=gmap(r);
+ $('det').innerHTML=`<h2>${r.name}</h2><div class="note">${r.mela}</div><p style="margin:8px 0 0">${r.desc}</p>
+ <h3>Arohana (ascending)</h3><div class="chips" id="ac">${chips(r.aro,'a',r)}</div>
+ <h3>Avarohana (descending)</h3><div class="chips" id="vc">${chips(r.ava,'v',r)}</div>
+ <div class="row" style="margin-top:12px">
+  <button class="pri" id="pa">▶ Arohana</button><button class="pri" id="pv">▶ Avarohana</button><button id="pb">▶ Both</button>
+  <button id="tg">Gamakas: ${useG?'on':'off'}</button></div>
+ <div class="note" style="margin-top:6px">Dashed outline = note carries a gamaka. Tap any swara to hear it.</div>
+ <h3>Gamakas in ${r.name}</h3>
+ ${r.gam.map((x,i)=>`<div class="g"><div><b>${x.n}</b> · ${x.t}<p>${x.d}</p></div><button data-g="${i}">▶ Hear</button></div>`).join('')}`;
+ $('pa').onclick=()=>seq(r.aro,'a',useG?gm:null);
+ $('pv').onclick=()=>seq(r.ava,'v',useG?gm:null);
+ $('pb').onclick=()=>{const all=[...r.aro,...r.ava.slice(1)];seq(all,'x',useG?gm:null)};
+ $('tg').onclick=()=>{useG=!useG;render()};
+ $('det').querySelectorAll('.sw').forEach(b=>b.onclick=()=>{ensure();newBus();tone(SW[b.dataset.n],ctx.currentTime+.05,1.2,useG?gm[b.dataset.n]:null,null)});
+ $('det').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{const x=r.gam[+b.dataset.g],i=r.aro.indexOf(x.n);hold(i>0?r.aro[i-1]:'S',x.n,x.t)});
+ $('list').querySelectorAll('.rg').forEach(b=>b.onclick=()=>{stop();cur=RAGAS.find(q=>q.id===b.dataset.id);render()});
+}
+function gloss(){
+ $('gloss').innerHTML=`<h2>Gamakas</h2><p class="note" style="margin-top:4px">Gamakas are the ornaments that give a raaga its character. Tap Hear to listen to each on the note G3.</p>`+
+ Object.entries(GT).map(([k,v])=>`<div class="g"><div><b>${k}</b><p>${v.d}</p></div><button data-k="${k}">▶ Hear</button></div>`).join('');
+ $('gloss').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>hold('R2','G3',b.dataset.k));
+}
+$('sa').innerHTML=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'].map((n,i)=>`<option value="${i}"${i===2?' selected':''}>${n}</option>`).join('');
+$('sa').onchange=()=>{if(dr){drone(false);drone(true)}};
+function drone(on){
+ if(dr){dr.forEach(o=>{try{o.stop()}catch(e){}});dr=null}
+ if(on){ensure();const g=ctx.createGain();g.gain.value=.06;g.connect(ctx.destination);dr=[];
+  [[.5,1],[.75,1],[1,1],[.5,1]].forEach(([m,v],i)=>{const o=ctx.createOscillator(),f=ctx.createBiquadFilter();o.type='sawtooth';o.frequency.value=base()*m;f.type='lowpass';f.frequency.value=900;o.connect(f);f.connect(g);o.detune.value=i*3;o.start();dr.push(o)})}
+ $('drone').textContent='Tanpura: '+(dr?'on':'off');
+}
+$('drone').onclick=()=>drone(!dr);
+$('stop').onclick=stop;
+$('t1').onclick=()=>{$('v1').hidden=false;$('v2').hidden=true;$('t1').classList.add('sel');$('t2').classList.remove('sel')};
+$('t2').onclick=()=>{$('v1').hidden=true;$('v2').hidden=false;$('t2').classList.add('sel');$('t1').classList.remove('sel');gloss()};
+render();
+</script></body></html>
